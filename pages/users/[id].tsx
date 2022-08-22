@@ -1,13 +1,62 @@
 import { useRouter } from "next/router";
+import Layout from "../../components/Layout";
 
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  website: string;
+}
 
-export default function detail() {
-  const router = useRouter();
-  const id = router.query;
-  console.log(id)
+interface UserDetailsProps {
+  user: User;
+}
 
-
+export default function detail(props: UserDetailsProps) {
+  const { user } = props;
   return (
-    <p>Anda di halaman {id.id}</p>
+    <Layout pageTitle='Detail User'>
+      <p>{user.name}</p>
+      <p>{user.email}</p>
+      <p>{user.phone}</p>
+      <p>{user.website}</p>
+    </Layout>
   )
+}
+
+
+export async function getStaticPaths() {
+  const res = await fetch('https://jsonplaceholder.typicode.com/users');
+  const dataUsers = await res.json();
+
+  const paths = dataUsers.map((user: User) => ({
+    params: {
+      id: `${user.id}`,
+    },
+  }));
+
+  return {
+    paths,
+    fallback: false
+  }
+}
+
+interface GetStaticProps {
+  params: {
+    id: string;
+  }
+}
+
+export async function getStaticProps(context: GetStaticProps) {
+  const { id } = context.params;
+  const res = await fetch('https://jsonplaceholder.typicode.com/users/' + id)
+  const user = await res.json();
+
+  return {
+    props: {
+      user,
+    }
+  }
+
 }
