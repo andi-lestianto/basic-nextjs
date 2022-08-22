@@ -17,7 +17,7 @@ export default function Users(props: UserData) {
 
       <p>User Page</p>
       {dataUsers.map((user) => (
-        <div className={styles['card-user']} onClick={() => route.push(`/users/${user.name}`)}>
+        <div key={user.id} className={styles['card-user']} onClick={() => route.push(`/users/${user.id}`)}>
           <div className={styles['card-item']}>{user.name} {user.email}</div>
         </div>
       ))}
