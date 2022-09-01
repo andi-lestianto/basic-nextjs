@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react'
+import Layout from '../../components/Layout';
 
 
 export default function BlogDetail() {
@@ -11,35 +12,38 @@ export default function BlogDetail() {
 
     const router = useRouter();
     const query = router.query;
-    axios.get(`https://jsonplaceholder.typicode.com/posts/${query.id}`)
-        .then(function (response) {
-            console.log(response.data.body)
-            setPostData(response.data)
-        })
-        .catch(function (error) {
-            console.log(error)
-            console.log(error.status)
-        });
+    const { idpost } = router.query;
+    // axios.get(`https://jsonplaceholder.typicode.com/posts/${query.id}`)
+    //     .then(function (response) {
+    //         console.log(response.data.body)
 
-    // useEffect(() => {
-    //     axios.get(`${base_url}/produk/${query.id}`)
-    //         .then(response => {
-    //             let data = response.data.data;
-    //             console.log(data);
-    //             setProduct(data);
-    //             setProductGallery(response.data.gallery);
-    //             //set first image
-    //             showImage(99, data.gambar)
-    //             return data;
-    //         }).catch((error) => {
-    //             console.log('error ' + error);
-    //         });
-    // }, [])
+    //     })
+    //     .catch(function (error) {
+    //         console.log(error)
+    //         console.log(error.status)
+    //     }); 
+    const [product, setProduct] = useState<any>([]);
+
+    useEffect(() => {
+        axios.get(`https://jsonplaceholder.typicode.com/posts/${query.id}`)
+            .then(response => {
+                let data = response.data;
+                console.log(data);
+                setProduct(data);
+                //set first imag
+                return data;
+            }).catch((error) => {
+                console.log('error ' + error);
+            });
+    }, [])
 
 
 
     return (
-        <div></div>
+        <Layout pageTitle={product.title} >
+            <h3>{product.title}</h3>
+            <div>{product.body}</div>
+        </Layout>
     )
 
 }
@@ -53,6 +57,7 @@ export default function BlogDetail() {
 //         }
 //     }
 // }
+
 
 
 
